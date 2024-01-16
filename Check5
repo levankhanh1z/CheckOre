@@ -1,20 +1,12 @@
--- Đường dẫn đến danh sách các đối tượng cần di chuyển vào Folder mới
--- Đường dẫn đến danh sách các đối tượng cần di chuyển vào Folder mới
 local pathToFolder = game.workspace.Mine
-
--- Tên của Folder mới để giữ lại các Part cần di chuyển
 local newFolderName = "PartClear"
-
--- Danh sách tên đối tượng cần di chuyển
 local objectsToMove = {"Stone", "Copper", "Quartz", "Iron", "Basalt", "Coal", "Quartz", "Iron", "Cobalt", "Granite", "Emerald", "Diorite", "Obsidian", "Ruby", "Mantle", "Nickel", "Magma", "Crystallized Stone", "Ice", "Prismatistone", "Reflectistone", "Bedrock", "Etherstone", "Celestone", "Gold"}
 
--- Kiểm tra xem Folder mới đã tồn tại chưa, nếu chưa thì tạo mới trong workspace của LocalPlayer
 local player = game.Players.LocalPlayer
 local newPathToFolder = player:FindFirstChild(newFolderName) or Instance.new("Folder")
 newPathToFolder.Name = newFolderName
 newPathToFolder.Parent = player
 
--- Hàm kiểm tra xem một đối tượng có tên nằm trong danh sách cần di chuyển hay không
 local function shouldMove(object)
     for _, name in ipairs(objectsToMove) do
         if object.Name == name then
@@ -24,10 +16,8 @@ local function shouldMove(object)
     return false
 end
 
--- Biến để theo dõi trạng thái bật/tắt
 local isMoving = false
 
--- Sự kiện theo dõi khi người chơi nhấn phím Y
 local userInputService = game:GetService("UserInputService")
 userInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     if not gameProcessedEvent then
@@ -37,16 +27,19 @@ userInputService.InputBegan:Connect(function(input, gameProcessedEvent)
                 -- Nếu bật, di chuyển các Part vào Folder mới
                 for _, child in pairs(pathToFolder:GetChildren()) do
                     if child:IsA("Part") and shouldMove(child) then
-                        child.Parent = newPathToFolder
+                        local clone = child:Clone()
+                        clone.Parent = newPathToFolder
+                        child:Destroy()
                     end
                 end
             else
                 -- Nếu tắt, di chuyển các Part về vị trí cũ
                 for _, child in pairs(newPathToFolder:GetChildren()) do
-                    child.Parent = pathToFolder
+                    local clone = child:Clone()
+                    clone.Parent = pathToFolder
+                    child:Destroy()
                 end
             end
         end
     end
 end)
-
