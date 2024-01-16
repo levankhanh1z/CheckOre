@@ -25,6 +25,25 @@ local function moveParts(partsToMove)
     end
 end
 
+local function moveObjects(name, targetFolder)
+    local partsToMove = {}
+    while true do
+        local child = targetFolder:FindFirstChild(name)
+        if not child or not child:IsA("Part") then
+            break
+        end
+        table.insert(partsToMove, child)
+        if #partsToMove >= 10000 then
+            moveParts(partsToMove)
+            partsToMove = {}
+            wait(moveDelay)
+        end
+    end
+    if #partsToMove > 0 then
+        moveParts(partsToMove)
+    end
+end
+
 local userInputService = game:GetService("UserInputService")
 userInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     if not gameProcessedEvent then
@@ -33,42 +52,12 @@ userInputService.InputBegan:Connect(function(input, gameProcessedEvent)
             if isMoving then
                 -- Nếu bật, di chuyển từng loại Part
                 for _, name in ipairs(objectsToMove) do
-                    local partsToMove = {}
-                    while true do
-                        local child = pathToFolder:FindFirstChild(name)
-                        if not child or not child:IsA("Part") then
-                            break
-                        end
-                        table.insert(partsToMove, child)
-                        if #partsToMove >= 10000 then
-                            moveParts(partsToMove)
-                            partsToMove = {}
-                            wait(moveDelay)
-                        end
-                    end
-                    if #partsToMove > 0 then
-                        moveParts(partsToMove)
-                    end
+                    moveObjects(name, pathToFolder)
                 end
             else
                 -- Nếu tắt, di chuyển từng Part từ newPathToFolder về pathToFolder
                 for _, name in ipairs(objectsToMove) do
-                    local partsToMove = {}
-                    while true do
-                        local child = newPathToFolder:FindFirstChild(name)
-                        if not child or not child:IsA("Part") then
-                            break
-                        end
-                        table.insert(partsToMove, child)
-                        if #partsToMove >= 10000 then
-                            moveParts(partsToMove)
-                            partsToMove = {}
-                            wait(moveDelay)
-                        end
-                    end
-                    if #partsToMove > 0 then
-                        moveParts(partsToMove)
-                    end
+                    moveObjects(name, newPathToFolder)
                 end
             end
         end
