@@ -24,20 +24,20 @@ userInputService.InputBegan:Connect(function(input, gameProcessedEvent)
         if input.KeyCode == Enum.KeyCode.Y then
             isMoving = not isMoving  -- Đảo ngược trạng thái bật/tắt
             if isMoving then
-                -- Nếu bật, di chuyển các Part vào Folder mới
-                for _, child in pairs(pathToFolder:GetChildren()) do
-                    if child:IsA("Part") and shouldMove(child) then
-                        local clone = child:Clone()
-                        clone.Parent = newPathToFolder
-                        child:Destroy()
+                -- Nếu bật, di chuyển từng Part trong danh sách
+                for _, name in ipairs(objectsToMove) do
+                    local child = pathToFolder:FindFirstChild(name)
+                    if child and child:IsA("Part") then
+                        child.Parent = newPathToFolder
                     end
                 end
             else
-                -- Nếu tắt, di chuyển các Part về vị trí cũ
-                for _, child in pairs(newPathToFolder:GetChildren()) do
-                    local clone = child:Clone()
-                    clone.Parent = pathToFolder
-                    child:Destroy()
+                -- Nếu tắt, di chuyển từng Part về vị trí cũ
+                for _, name in ipairs(objectsToMove) do
+                    local child = newPathToFolder:FindFirstChild(name)
+                    if child and child:IsA("Part") then
+                        child.Parent = pathToFolder
+                    end
                 end
             end
         end
