@@ -3,9 +3,9 @@ local newFolderName = "PartClear"
 local objectsToMove = {"Stone", "Copper", "Quartz", "Iron", "Basalt", "Coal", "Quartz", "Iron", "Cobalt", "Granite", "Emerald", "Diorite", "Obsidian", "Ruby", "Mantle", "Nickel", "Magma", "Crystallized Stone", "Ice", "Prismatistone", "Reflectistone", "Bedrock", "Etherstone", "Celestone", "Gold"}
 
 local player = game.Players.LocalPlayer
-local newPathToFolder = player:FindFirstChild(newFolderName) or Instance.new("Folder")
+local newPathToFolder = game.workspace.Mine:FindFirstChild(newFolderName) or Instance.new("Folder")
 newPathToFolder.Name = newFolderName
-newPathToFolder.Parent = player
+newPathToFolder.Parent = game.workspace.Mine
 
 local function shouldMove(object)
     for _, name in ipairs(objectsToMove) do
