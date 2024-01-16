@@ -17,10 +17,12 @@ local function shouldMove(object)
 end
 
 local isMoving = false
+local moveDelay = 0.5 -- Thời gian nghỉ giữa các lần di chuyển (giây)
 
-local function movePartsToFolder(parts, targetFolder)
-    for _, part in ipairs(parts) do
-        part.Parent = targetFolder
+local function moveParts(partsToMove)
+    for _, part in ipairs(partsToMove) do
+        part.Parent = newPathToFolder
+        wait(moveDelay)
     end
 end
 
@@ -30,21 +32,43 @@ userInputService.InputBegan:Connect(function(input, gameProcessedEvent)
         if input.KeyCode == Enum.KeyCode.Y then
             isMoving = not isMoving  -- Đảo ngược trạng thái bật/tắt
             if isMoving then
-                -- Nếu bật, di chuyển từng Part trong danh sách
+                -- Nếu bật, di chuyển từng loại Part
                 for _, name in ipairs(objectsToMove) do
-                    local parts = {}
-                    repeat
+                    local partsToMove = {}
+                    while true do
                         local child = pathToFolder:FindFirstChild(name)
-                        if child and child:IsA("Part") then
-                            table.insert(parts, child)
+                        if not child or not child:IsA("Part") then
+                            break
                         end
-                    until not child
-
-                    movePartsToFolder(parts, newPathToFolder)
+                        table.insert(partsToMove, child)
+                        if #partsToMove >= 100 then
+                            moveParts(partsToMove)
+                            partsToMove = {}
+                        end
+                    end
+                    if #partsToMove > 0 then
+                        moveParts(partsToMove)
+                    end
                 end
             else
                 -- Nếu tắt, di chuyển từng Part từ newPathToFolder về pathToFolder
-                movePartsToFolder(newPathToFolder:GetChildren(), pathToFolder)
+                for _, name in ipairs(objectsToMove) do
+                    local partsToMove = {}
+                    while true do
+                        local child = newPathToFolder:FindFirstChild(name)
+                        if not child or not child:IsA("Part") then
+                            break
+                        end
+                        table.insert(partsToMove, child)
+                        if #partsToMove >= 100 then
+                            moveParts(partsToMove)
+                            partsToMove = {}
+                        end
+                    end
+                    if #partsToMove > 0 then
+                        moveParts(partsToMove)
+                    end
+                end
             end
         end
     end
