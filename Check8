@@ -32,7 +32,7 @@ userInputService.InputBegan:Connect(function(input, gameProcessedEvent)
                     end
                 end
             else
-                -- Nếu tắt, di chuyển từng Part về vị trí cũ
+                -- Nếu tắt, di chuyển từng Part từ newPathToFolder về pathToFolder
                 for _, name in ipairs(objectsToMove) do
                     local child = newPathToFolder:FindFirstChild(name)
                     if child and child:IsA("Part") then
