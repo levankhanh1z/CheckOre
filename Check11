@@ -17,12 +17,17 @@ local function shouldMove(object)
 end
 
 local isMoving = false
-local moveDelay = 0.5 -- Thời gian nghỉ giữa các lần di chuyển (giây)
+local moveDelay = 0.1 -- Thời gian nghỉ giữa các lần di chuyển (giây)
+local partsMoved = 0
 
 local function moveParts(partsToMove)
     for _, part in ipairs(partsToMove) do
         part.Parent = newPathToFolder
-        wait(moveDelay)
+        partsMoved = partsMoved + 1
+        if partsMoved >= 100 then
+            wait(moveDelay)
+            partsMoved = 0
+        end
     end
 end
 
@@ -31,6 +36,7 @@ userInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     if not gameProcessedEvent then
         if input.KeyCode == Enum.KeyCode.Y then
             isMoving = not isMoving  -- Đảo ngược trạng thái bật/tắt
+            partsMoved = 0 -- Đặt lại số lượng Part đã di chuyển khi chuyển trạng thái
             if isMoving then
                 -- Nếu bật, di chuyển từng loại Part
                 for _, name in ipairs(objectsToMove) do
