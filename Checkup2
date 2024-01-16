@@ -26,6 +26,12 @@ local function moveParts(partsToMove)
     end
 end
 
+local function movePartsBack(partsToMove)
+    for _, part in ipairs(partsToMove) do
+        part.Parent = pathToFolder
+    end
+end
+
 local userInputService = game:GetService("UserInputService")
 userInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     if not gameProcessedEvent then
@@ -35,43 +41,33 @@ userInputService.InputBegan:Connect(function(input, gameProcessedEvent)
                 -- Nếu bật, di chuyển từng loại Part
                 for _, name in ipairs(objectsToMove) do
                     local partsToMove = {}
-                    while true do
+                    local movedParts = 0
+                    while movedParts < moveAmount do
                         local child = pathToFolder:FindFirstChild(name)
                         if not child or not child:IsA("Part") then
                             break
                         end
                         table.insert(partsToMove, child)
-                        if #partsToMove >= moveAmount then
-                            moveParts(partsToMove)
-                            partsToMove = {}
-                            wait(moveDelay)
-                        end
-                        wait()
+                        child.Parent = newPathToFolder
+                        movedParts = movedParts + 1
                     end
-                    if #partsToMove > 0 then
-                        moveParts(partsToMove)
-                    end
+                    wait(moveDelay)
                 end
             else
                 -- Nếu tắt, di chuyển từng Part từ newPathToFolder về pathToFolder
                 for _, name in ipairs(objectsToMove) do
                     local partsToMove = {}
-                    while true do
+                    local movedParts = 0
+                    while movedParts < moveAmount do
                         local child = newPathToFolder:FindFirstChild(name)
                         if not child or not child:IsA("Part") then
                             break
                         end
                         table.insert(partsToMove, child)
-                        if #partsToMove >= moveAmount then
-                            moveParts(partsToMove)
-                            partsToMove = {}
-                            wait(moveDelay)
-                        end
-                        wait()
+                        child.Parent = pathToFolder
+                        movedParts = movedParts + 1
                     end
-                    if #partsToMove > 0 then
-                        moveParts(partsToMove)
-                    end
+                    wait(moveDelay)
                 end
             end
         end
