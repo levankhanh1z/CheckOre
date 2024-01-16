@@ -46,6 +46,7 @@ userInputService.InputBegan:Connect(function(input, gameProcessedEvent)
                             partsToMove = {}
                             wait(moveDelay)
                         end
+                        wait()
                     end
                     if #partsToMove > 0 then
                         moveParts(partsToMove)
@@ -66,6 +67,7 @@ userInputService.InputBegan:Connect(function(input, gameProcessedEvent)
                             partsToMove = {}
                             wait(moveDelay)
                         end
+                        wait()
                     end
                     if #partsToMove > 0 then
                         moveParts(partsToMove)
