@@ -6,7 +6,7 @@ local pathToFolder = game.workspace.Mine
 local newFolderName = "PartClear"
 
 -- Danh sách tên đối tượng cần di chuyển
-local objectsToMove = {"Stone", "Copper", "Quartz", "Iron", "Basalt", "Coal", "Quartz", "Iron", "Cobalt", "Granite", "Emerald", "Diorite", "Obsidian", "Ruby", "Mantle", "Nickel", "Magma", "Crystallized Stone", "Ice", "Prismatistone", "Reflectistone", "Bedrock"}
+local objectsToMove = {"Stone", "Copper", "Quartz", "Iron", "Basalt", "Coal", "Quartz", "Iron", "Cobalt", "Granite", "Emerald", "Diorite", "Obsidian", "Ruby", "Mantle", "Nickel", "Magma", "Crystallized Stone", "Ice", "Prismatistone", "Reflectistone", "Bedrock", "Etherstone", "Celestone", "Gold"}
 
 -- Kiểm tra xem Folder mới đã tồn tại chưa, nếu chưa thì tạo mới trong workspace của LocalPlayer
 local player = game.Players.LocalPlayer
