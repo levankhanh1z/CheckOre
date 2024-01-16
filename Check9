@@ -18,6 +18,12 @@ end
 
 local isMoving = false
 
+local function movePartsToFolder(parts, targetFolder)
+    for _, part in ipairs(parts) do
+        part.Parent = targetFolder
+    end
+end
+
 local userInputService = game:GetService("UserInputService")
 userInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     if not gameProcessedEvent then
@@ -26,19 +32,19 @@ userInputService.InputBegan:Connect(function(input, gameProcessedEvent)
             if isMoving then
                 -- Nếu bật, di chuyển từng Part trong danh sách
                 for _, name in ipairs(objectsToMove) do
-                    local child = pathToFolder:FindFirstChild(name)
-                    if child and child:IsA("Part") then
-                        child.Parent = newPathToFolder
-                    end
+                    local parts = {}
+                    repeat
+                        local child = pathToFolder:FindFirstChild(name)
+                        if child and child:IsA("Part") then
+                            table.insert(parts, child)
+                        end
+                    until not child
+
+                    movePartsToFolder(parts, newPathToFolder)
                 end
             else
                 -- Nếu tắt, di chuyển từng Part từ newPathToFolder về pathToFolder
-                for _, name in ipairs(objectsToMove) do
-                    local child = newPathToFolder:FindFirstChild(name)
-                    if child and child:IsA("Part") then
-                        child.Parent = pathToFolder
-                    end
-                end
+                movePartsToFolder(newPathToFolder:GetChildren(), pathToFolder)
             end
         end
     end
